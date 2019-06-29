@@ -48,5 +48,6 @@ export {
     reducer as default,
     initialState as modalsInitialState,
     openVideoInvitationModal,
-    closeVideoInvitationModal
+    closeVideoInvitationModal,
+    MODAL_VIDEO_CHAT_INVITATION
 }

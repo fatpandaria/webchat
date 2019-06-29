@@ -1,14 +1,14 @@
-import {applyMiddleware, compose, combineReducers} from 'redux';
+import {combineReducers} from 'redux';
 import modalReducer, {modalsInitialState} from './modals';
-const webchatInitialState = {
+const webChatInitialState = {
     modals: modalsInitialState
 }
 
-const webchatReducer = combineReducers({
+const webChatReducer = combineReducers({
     modals: modalReducer
 })
 
 export {
-    webchatReducer as default,
-    webchatInitialState
+    webChatReducer as default,
+    webChatInitialState
 }

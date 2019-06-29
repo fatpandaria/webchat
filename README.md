@@ -66,3 +66,11 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+
+yarn config get registry
+https://registry.yarnpkg.com
+
+yarn config set registry https://registry.npm.taobao.org
+
+yarn install node-sass toooooo slow
