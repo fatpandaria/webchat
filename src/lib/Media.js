@@ -131,7 +131,7 @@ class Media extends EventEmitter {
         const playerContainer = document.querySelector(`#${id}`);
         if (stream) {
             const video = document.createElement('video');
-            video.srcObject = this.stream;
+            video.srcObject = stream;
             video.controls = false;
             video.muted = true; // TODO: make it configurable, autoplay limit in chrome
             playerContainer.appendChild(video);
