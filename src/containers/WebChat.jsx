@@ -6,6 +6,8 @@ import Peer from 'peerjs';
 import Media from '../lib/Media'
 import SoundMeter from '../lib/SoundMeter';
 import {genRandomStr} from '../lib/uitls';
+const env = process.env.NODE_ENV;
+console.log(env);
 class WebChat extends React.Component {
     constructor(props) {
         super(props);
@@ -98,6 +100,7 @@ class WebChat extends React.Component {
         }
         this.state.uniqueId = uniqueId;
         console.log(this.state.uniqueId)
+        let host = env === 'development' ? 'localhost': 'https://webchat.yutengrock.com'; //FIXME:use config to make it
         let peer = new Peer(uniqueId,{host:'localhost',port:9000,path:'/myapp'}); // supposed to pass id in,omit it will get a random one from the server
         this.setState({peer});
         peer.on('connection', (conn) => {
