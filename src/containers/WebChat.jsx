@@ -5,6 +5,7 @@ import { openVideoInvitationModal, closeVideoInvitationModal, MODAL_VIDEO_CHAT_I
 import Peer from 'peerjs';
 import Media from '../lib/Media'
 import SoundMeter from '../lib/SoundMeter';
+import {genRandomStr} from '../lib/uitls';
 class WebChat extends React.Component {
     constructor(props) {
         super(props);
@@ -18,31 +19,37 @@ class WebChat extends React.Component {
                 streamSource: 'camera'
             },
             soundLevel: 0,
-            detectTimer: null
+            detectTimer: null,
+            uniqueId: '',
+            stream: null,
+
         }
         this.connectOther = this.connectOther.bind(this);
         this.recordVideo = this.recordVideo.bind(this);
+        this.connectToPeerServer = this.connectToPeerServer.bind(this);
+        this.startVideoChat = this.startVideoChat.bind(this);
+        this.disconnectToPeerServer = this.disconnectToPeerServer.bind(this);
     }
     componentDidMount() {
-        this.peer = new Peer() // supposed to pass id in,omit it will get a random one from the server
         this.mediaHolder = new Media(this.state.options);
-        this.peer.on('connection', (conn) => {
-            conn.on('data', (data) => {
-                console.log(data);
-            }
-            )
-        });
         this.initVideo();
+        this.state.uniqueId = localStorage.getItem('uniqueid') || '';
     }
     connectOther(id) {
-        this.conn = this.peer.connect(id)
+        let conn = this.state.peer.connect(id);
+        this.setState({conn});
+        conn.on('open', () => {
+            conn.send('hi');
+        }
+        )
+        
     }
     initVideo() {
         this.mediaHolder.createStream().then((stream) => {
-            this.stream = stream;
-            this.video = this.mediaHolder.play('videoWrapper');
-            this.video.controls = true;
-            this.video.muted = false;
+            let video = this.mediaHolder.play('yourVideoWrapper',stream);
+            this.setState({stream, video});
+            video.controls = false;
+            video.muted = true; // you don't need to listen to your own voice
             this.initSoundDetector(stream);
         }).catch((err) => {
             console.log(err)
@@ -83,10 +90,52 @@ class WebChat extends React.Component {
             this.mediaHolder.stopRecord();
         }, 10000);
     }
+    connectToPeerServer(){
+        let uniqueId = localStorage.getItem('uniqueid');
+        if(!uniqueId){
+            uniqueId = genRandomStr(10);
+            localStorage.setItem('uniqueid', uniqueId);
+        }
+        this.state.uniqueId = uniqueId;
+        console.log(this.state.uniqueId)
+        let peer = new Peer(uniqueId,{host:'localhost',port:9000,path:'/myapp'}); // supposed to pass id in,omit it will get a random one from the server
+        this.setState({peer});
+        peer.on('connection', (conn) => {
+            conn.on('data', (data) => {
+                console.log(data);
+            }
+            )
+        });
+        peer.on('call',(call) => { // answer when you get called
+            call.answer(this.state.stream);
+            call.once('stream', (remoteStream) => {
+                console.log(remoteStream);
+                let video = this.mediaHolder.play('peerVideoWrapper', remoteStream);
+                video.muted = false;
+            })
+        })
+
+    }
+    startVideoChat(id){
+        console.log('start video chat with', id)
+        // this.connectOther(id);
+        let call = this.state.peer.call(id, this.state.stream);
+        call.once('stream',(remoteStream) => {
+            console.log(remoteStream);
+            let video = this.mediaHolder.play('peerVideoWrapper', remoteStream);
+            video.muted = false;
+        })
+    }
+    disconnectToPeerServer(){
+        console.log('not done yet')
+    }
     render() {
         const handlers = {
             connectOther: this.connectOther,
-            recordVideo: this.recordVideo
+            recordVideo: this.recordVideo,
+            connectToPeerServer: this.connectToPeerServer,
+            startVideoChat: this.startVideoChat,
+            disconnectToPeerServer: this.disconnectToPeerServer
         }
         return (
             <WebChatComponent {...handlers} {...this.state}></WebChatComponent >

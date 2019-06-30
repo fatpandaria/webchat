@@ -126,10 +126,10 @@ class Media extends EventEmitter {
      * @param {*} id id of the div elememt
      * @memberof Media
      */
-    play(id) {
+    play(id,stream) {
         // should check whether the stream is video or audio only
         const playerContainer = document.querySelector(`#${id}`);
-        if (this.stream) {
+        if (stream) {
             const video = document.createElement('video');
             video.srcObject = this.stream;
             video.controls = false;

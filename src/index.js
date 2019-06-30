@@ -5,6 +5,8 @@ import {Provider} from 'react-redux';
 import WebChat from './containers/WebChat';
 import webChatReducer from './reducers/index';
 import * as serviceWorker from './serviceWorker';
+import './styles/reset.scss';
+import 'antd/dist/antd.css';
 const store = createStore(webChatReducer);
 
 ReactDOM.render(<Provider store={store}><WebChat /></Provider>, document.getElementById('root'));

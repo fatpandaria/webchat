@@ -1,3 +1,63 @@
-.app {
-    color: red;
+.webChatWrapper{
+    height: 100vh;
+    width: 100vw;
+    background-color: #fbfbfb;
+    display: grid;
+    grid-template-columns: 100px 300px 1fr;
+}
+.leftNav{
+    background-color: black;
+    text-align: center;
+    padding: 20px 0;
+}
+.middleList{
+    overflow: auto;
+    border-right: 1px solid #ccc;
+    padding: 20px 10px;
+    :global{
+        .ant-input{
+            margin: 10px 0;
+        }
+    }
+}
+.friendItem{
+    height: 50px;
+    text-align: left;
+    line-height: 50px;
+    border-bottom: 1px solid #ccc;
+    &:hover{
+        background-color: #eee;
+    }
+}
+.rightChat{
+    display: grid;
+    grid-template-rows: 1fr 200px;
+    .inputWrapper{
+        background-color: lightblue;
+    }
+}
+.videoWrapper{
+    display: grid;
+    grid-template-columns: 200px 1fr;
+}
+.yourVideoWrapper{
+    width: 100%;
+    video {
+        width: 100%;
+        height: 100%;
+    }
+    :global{
+        .ant-progress{
+            padding: 0 10px;
+        }
+    }
+}
+.peerVideoWrapper{
+    width: 100%;
+    text-align: center;
+    video {
+        width: 100%;
+        height: 100%;
+        max-width: 600px;
+    }
 }
