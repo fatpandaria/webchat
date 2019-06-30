@@ -101,7 +101,7 @@ class WebChat extends React.Component {
         this.state.uniqueId = uniqueId;
         console.log(this.state.uniqueId)
         let host = env === 'development' ? 'localhost': 'https://webchat.yutengrock.com'; //FIXME:use config to make it
-        let peer = new Peer(uniqueId,{host:'localhost',port:9000,path:'/myapp'}); // supposed to pass id in,omit it will get a random one from the server
+        let peer = new Peer(uniqueId,{host:host,port:9000,path:'/myapp'}); // supposed to pass id in,omit it will get a random one from the server
         this.setState({peer});
         peer.on('connection', (conn) => {
             conn.on('data', (data) => {
